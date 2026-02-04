@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Be My Valentine</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins&display=swap');
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+  height:100vh;
+  background:radial-gradient(circle at top,#ffe0ec,#fff0f5);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  overflow:hidden;
+  font-family:'Poppins',sans-serif;
+}
+
+/* 🌸 Falling petals */
+.petal{
+  position:absolute;
+  width:18px;
+  height:18px;
+  background:linear-gradient(145deg,#ff9eb5,#ff6f91);
+  border-radius:60% 40% 60% 40%;
+  opacity:.7;
+  animation:fall linear infinite;
+}
+@keyframes fall{
+  to{transform:translateY(110vh) rotate(360deg)}
+}
+
+/* 💖 Container */
+.container{
+  text-align:center;
+  z-index:5;
+}
+
+/* ✨ Text */
+.title{
+  font-family:'Playfair Display',serif;
+  font-size:2.6rem;
+  color:#c2255c;
+  margin-bottom:8px;
+}
+.subtitle{
+  color:#555;
+  margin-bottom:22px;
+}
+
+/* 🌷 Flower (MORE BLOOMY) */
+.flower{
+  position:relative;
+  width:170px;
+  height:170px;
+  margin:auto;
+  animation:float 4s ease-in-out infinite;
+}
+@keyframes float{
+  50%{transform:scale(1.08) rotate(2deg)}
+}
+
+.petal-flower{
+  position:absolute;
+  width:75px;
+  height:120px;
+  background:radial-gradient(circle,#ffc2d1,#ff5d8f);
+  border-radius:50%;
+  top:18px;
+  left:47px;
+  transform-origin:bottom center;
+  transform:scale(0) rotate(var(--r));
+  transition:1.3s ease;
+}
+.flower.open .petal-flower{
+  transform:scale(1.1) rotate(var(--r));
+}
+
+.p1{--r:0deg}
+.p2{--r:60deg}
+.p3{--r:120deg}
+.p4{--r:180deg}
+.p5{--r:240deg}
+.p6{--r:300deg}
+
+.center{
+  position:absolute;
+  width:48px;
+  height:48px;
+  background:radial-gradient(circle,#ffe066,#fab005);
+  border-radius:50%;
+  top:61px;
+  left:61px;
+  box-shadow:0 0 20px gold;
+}
+
+/* 🌿 Stem */
+.stem{
+  width:8px;
+  height:130px;
+  background:linear-gradient(#2f9e44,#1b7a30);
+  margin:auto;
+  border-radius:20px;
+}
+
+/* 💘 Buttons */
+.buttons{
+  margin-top:25px;
+  display:flex;
+  justify-content:center;
+  gap:20px;
+  position:relative;
+}
+
+button{
+  padding:12px 32px;
+  border-radius:50px;
+  border:none;
+  font-size:1rem;
+  cursor:pointer;
+}
+
+#yes{
+  background:#ff4d6d;
+  color:white;
+}
+
+#no{
+  background:#dee2e6;
+  color:#333;
+  position:relative;
+}
+
+/* 💌 Message */
+.message{
+  margin-top:20px;
+  font-size:1.3rem;
+  color:#d6336c;
+  display:none;
+}
+
+/* 🎆 Fireworks */
+.fx{
+  position:absolute;
+  animation:explode 2.5s forwards;
+  font-size:22px;
+}
+@keyframes explode{
+  to{
+    opacity:0;
+    transform:translate(var(--x),var(--y)) scale(1.6);
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <div class="title">Can you be my Valentine? 💖</div>
+  <div class="subtitle">Someone special is asking…</div>
+
+  <div class="flower" id="flower">
+    <div class="petal-flower p1"></div>
+    <div class="petal-flower p2"></div>
+    <div class="petal-flower p3"></div>
+    <div class="petal-flower p4"></div>
+    <div class="petal-flower p5"></div>
+    <div class="petal-flower p6"></div>
+    <div class="center"></div>
+  </div>
+
+  <div class="stem"></div>
+
+  <div class="buttons">
+    <button id="yes">YES 💕</button>
+    <button id="no">NO 🙈</button>
+  </div>
+
+  <div class="message" id="msg">
+    💖 You said YES! Happy Valentine’s Day! 💖
+  </div>
+</div>
+
+<audio id="music">
+  <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_4cdeccfc79.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+/* 🌸 Petals */
+for(let i=0;i<40;i++){
+  const p=document.createElement("div");
+  p.className="petal";
+  p.style.left=Math.random()*100+"vw";
+  p.style.animationDuration=5+Math.random()*5+"s";
+  document.body.appendChild(p);
+}
+
+/* 🙈 NO button – BIGGER SPREAD */
+const no=document.getElementById("no");
+no.onmouseover=no.ontouchstart=()=>{
+  const x=(Math.random()*60-30)+"vw";
+  const y=(Math.random()*40-20)+"vh";
+  no.style.transform=`translate(${x},${y})`;
+};
+
+/* 🎆 Fireworks function */
+function firework(x,y){
+  for(let i=0;i<30;i++){
+    const fx=document.createElement("div");
+    fx.className="fx";
+    fx.textContent=Math.random()>0.5?"🎆":"💖";
+    fx.style.left=x+"px";
+    fx.style.top=y+"px";
+    fx.style.setProperty("--x",`${Math.random()*400-200}px`);
+    fx.style.setProperty("--y",`${Math.random()*400-200}px`);
+    document.body.appendChild(fx);
+    setTimeout(()=>fx.remove(),2500);
+  }
+}
+
+/* 💖 YES click – CONTINUOUS FIREWORKS */
+let fireworkInterval=null;
+
+const yes=document.getElementById("yes");
+const flower=document.getElementById("flower");
+const msg=document.getElementById("msg");
+const music=document.getElementById("music");
+
+yes.onclick=(e)=>{
+  flower.classList.add("open");
+  msg.style.display="block";
+  music.currentTime=0;
+  music.play();
+
+  if(!fireworkInterval){
+    fireworkInterval=setInterval(()=>{
+      firework(
+        Math.random()*window.innerWidth,
+        Math.random()*window.innerHeight*0.6
+      );
+    },600);
+  }
+};
+</script>
+
+</body>
+</html>
